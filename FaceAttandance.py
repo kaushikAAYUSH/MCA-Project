@@ -6,15 +6,15 @@ from datetime import  datetime
 
 path = "images"
 images = []
-classNames = []
+StudentNames = []
 mylist = os.listdir(path)
 print(mylist)
 for cl in mylist:
     curImg = cv2.imread(f'{path}/{cl}')
     images.append(curImg)
-    classNames.append((os.path.splitext(cl)[0]))
+    StudentNames.append((os.path.splitext(cl)[0]))
 print(len(images))
-
+print(StudentNames)
 def find_encodings(image):
     encodeList = []
     for img in image:
@@ -26,7 +26,6 @@ def find_encodings(image):
 def markAttendance(name):
     with open('attendance.csv','r+') as f:
         myDatalist = f.readlines()
-        print(myDatalist)
         nameList = []
         for line in myDatalist:
             entry = line.split(',')
@@ -56,7 +55,7 @@ while True:
         matchIndex = np.argmin(faceDis)
 
         if matches[matchIndex]:
-            name = classNames[matchIndex].upper()
+            name = StudentNames[matchIndex].upper()
             print(name)
             y1,x2,y2,x1= faceLoc
             y1, x2, y2, x1 = y1*4,x2*4,y2*4,x1*4
@@ -66,4 +65,8 @@ while True:
             markAttendance(name)
 
     cv2.imshow('webcam',img)
-    cv2.waitKey(1)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
